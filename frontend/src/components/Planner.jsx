@@ -429,14 +429,15 @@ const Planner = () => {
         background: 'rgba(99,102,241,0.1)', border: '1px solid var(--primary)',
         borderRadius: '0.75rem', padding: '1rem', marginBottom: '2rem',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        flexWrap: 'wrap', gap: '1rem'
       }}>
         <div>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', margin: 0, marginBottom: '0.25rem' }}>PLANNING FOR</p>
-          <h3 style={{ margin: 0, color: 'var(--primary)' }}>{activeChannel.name}</h3>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', margin: 0, marginBottom: '0.1rem' }}>PLANNING FOR</p>
+          <h3 style={{ margin: 0, color: 'var(--primary)', fontSize: '1.1rem' }}>{activeChannel.name}</h3>
         </div>
         {canEdit && (
-          <button className="btn btn-primary" onClick={() => setShowAdd(!showAdd)}>
-            <Plus size={18} style={{ verticalAlign: 'middle', marginRight: '5px' }} />
+          <button className="btn btn-primary" onClick={() => setShowAdd(!showAdd)} style={{ width: 'auto' }}>
+            <Plus size={18} />
             Add Idea
           </button>
         )}
@@ -482,28 +483,26 @@ const Planner = () => {
             {newIdea.references.length > 0 && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
                 {newIdea.references.map((ref, idx) => (
-                  <div key={idx} style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '0.5rem', alignItems: 'start', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '0.4rem', padding: '0.6rem 0.75rem' }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                  <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '0.4rem', padding: '0.75rem', position: 'relative' }}>
+                    <button type="button" onClick={() => removeRef(idx)} style={{ position: 'absolute', right: '0.5rem', top: '0.5rem', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', padding: '0.25rem', zIndex: 1 }} title="Remove reference">
+                      <X size={16} />
+                    </button>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', paddingRight: '1.5rem' }}>
                       <input type="url" placeholder="https://example.com" value={ref.url}
                         onChange={e => updateRef(idx, 'url', e.target.value)}
-                        style={{ width: '100%', padding: '0.4rem 0.6rem', background: '#0f172a', border: `1px solid ${ref.url && !isValidUrl(ref.url) ? '#ef4444' : 'rgba(255,255,255,0.12)'}`, borderRadius: '0.3rem', color: 'white', fontSize: '0.85rem', outline: 'none', boxSizing: 'border-box' }} />
+                        style={{ width: '100%', padding: '0.5rem', background: '#0f172a', border: `1px solid ${ref.url && !isValidUrl(ref.url) ? '#ef4444' : 'rgba(255,255,255,0.12)'}`, borderRadius: '0.3rem', color: 'white', fontSize: '0.85rem', outline: 'none' }} />
                       {ref.url && !isValidUrl(ref.url) && <span style={{ fontSize: '0.75rem', color: '#ef4444' }}>Invalid URL</span>}
                       <input type="text" placeholder="Note (optional)" value={ref.note}
                         onChange={e => updateRef(idx, 'note', e.target.value)}
-                        style={{ width: '100%', padding: '0.4rem 0.6rem', background: '#0f172a', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '0.3rem', color: 'white', fontSize: '0.82rem', outline: 'none', boxSizing: 'border-box' }} />
+                        style={{ width: '100%', padding: '0.5rem', background: '#0f172a', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '0.3rem', color: 'white', fontSize: '0.82rem', outline: 'none' }} />
                     </div>
-                    <button type="button" onClick={() => removeRef(idx)} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', padding: '0.25rem', opacity: 0.7 }}
-                      onMouseOver={e => e.currentTarget.style.opacity = '1'}
-                      onMouseOut={e => e.currentTarget.style.opacity = '0.7'}>
-                      <X size={15} />
-                    </button>
                   </div>
                 ))}
               </div>
             )}
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <div className="responsive-grid">
             <div className="form-group">
               <label>Planned Date</label>
               <input type="date" value={newIdea.plannedDate} onChange={e => setNewIdea({ ...newIdea, plannedDate: e.target.value })} />

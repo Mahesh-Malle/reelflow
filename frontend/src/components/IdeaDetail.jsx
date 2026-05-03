@@ -161,7 +161,7 @@ const IdeaDetail = ({ ideaId, onBack, onRefresh }) => {
 
   return (
     <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-      <div className="stat-card" style={{ width: '90%', maxWidth: '600px', maxHeight: '90vh', overflowY: 'auto' }}>
+      <div className="stat-card" style={{ width: '95%', maxWidth: '600px', maxHeight: '95vh', overflowY: 'auto', margin: '1rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem', paddingBottom: '1rem', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
           <button onClick={onBack} style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <ArrowLeft size={20} /> Back
@@ -279,7 +279,7 @@ const IdeaDetail = ({ ideaId, onBack, onRefresh }) => {
             {idea.status === 'Posted' && (
               <div style={{ background: 'rgba(34,197,94,0.1)', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
                 <h4 style={{ marginTop: 0, marginBottom: '1rem' }}>📊 Performance</h4>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="stats-grid" style={{ gap: '1rem' }}>
                   <div>
                     <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>YouTube Views</div>
                     <div style={{ fontSize: '1.25rem', fontWeight: '600' }}>{idea.youtube?.views || 0}</div>
@@ -300,18 +300,18 @@ const IdeaDetail = ({ ideaId, onBack, onRefresh }) => {
               </div>
             )}
 
-            <div style={{ display: 'flex', gap: '1rem' }}>
+            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
               {idea.status !== 'Posted' && (
                 <>
                   {canEdit && (
-                    <button onClick={() => setIsEditing(true)} className="btn btn-primary">Edit</button>
+                    <button onClick={() => setIsEditing(true)} className="btn btn-primary" style={{ flex: 1, minWidth: '100px' }}>Edit</button>
                   )}
                   {canPost && (
                     <>
-                      <button onClick={() => markPosted(false)} className="btn" style={{ background: 'var(--success)' }}>
+                      <button onClick={() => markPosted(false)} className="btn" style={{ background: 'var(--success)', flex: 1, minWidth: '140px' }}>
                         <CheckCircle size={16} /> Mark Posted
                       </button>
-                      <button onClick={() => markPosted(true)} className="btn" style={{ background: '#059669', display: 'flex', alignItems: 'center', gap: '0.4rem' }} title="Post with 0 metrics">
+                      <button onClick={() => markPosted(true)} className="btn" style={{ background: '#059669', display: 'flex', alignItems: 'center', gap: '0.4rem', flex: 1, minWidth: '140px' }} title="Post with 0 metrics">
                         <Zap size={16} /> Quick Post
                       </button>
                     </>
@@ -331,7 +331,7 @@ const IdeaDetail = ({ ideaId, onBack, onRefresh }) => {
               />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div className="responsive-grid">
               <div className="form-group">
                 <label>Planned Date</label>
                 <input
@@ -453,14 +453,17 @@ const IdeaDetail = ({ ideaId, onBack, onRefresh }) => {
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
                   {(editData.references || []).map((ref, idx) => (
-                    <div key={idx} style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '0.5rem', alignItems: 'start', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '0.4rem', padding: '0.6rem 0.75rem' }}>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                    <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '0.4rem', padding: '0.75rem', position: 'relative' }}>
+                      <button type="button" onClick={() => removeReference(idx)} style={{ position: 'absolute', right: '0.5rem', top: '0.5rem', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', padding: '0.25rem', zIndex: 1 }} title="Remove reference">
+                        <X size={16} />
+                      </button>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', paddingRight: '1.5rem' }}>
                         <input
                           type="url"
                           placeholder="https://example.com"
                           value={ref.url}
                           onChange={e => updateReference(idx, 'url', e.target.value)}
-                          style={{ width: '100%', padding: '0.4rem 0.6rem', background: '#0f172a', border: `1px solid ${ref.url && !isValidUrl(ref.url) ? '#ef4444' : 'rgba(255,255,255,0.12)'}`, borderRadius: '0.3rem', color: 'white', fontSize: '0.85rem', outline: 'none', boxSizing: 'border-box' }}
+                          style={{ width: '100%', padding: '0.5rem', background: '#0f172a', border: `1px solid ${ref.url && !isValidUrl(ref.url) ? '#ef4444' : 'rgba(255,255,255,0.12)'}`, borderRadius: '0.3rem', color: 'white', fontSize: '0.85rem', outline: 'none' }}
                         />
                         {ref.url && !isValidUrl(ref.url) && (
                           <span style={{ fontSize: '0.75rem', color: '#ef4444' }}>Invalid URL</span>
@@ -470,29 +473,20 @@ const IdeaDetail = ({ ideaId, onBack, onRefresh }) => {
                           placeholder="Note (optional)"
                           value={ref.note}
                           onChange={e => updateReference(idx, 'note', e.target.value)}
-                          style={{ width: '100%', padding: '0.4rem 0.6rem', background: '#0f172a', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '0.3rem', color: 'white', fontSize: '0.82rem', outline: 'none', boxSizing: 'border-box' }}
+                          style={{ width: '100%', padding: '0.5rem', background: '#0f172a', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '0.3rem', color: 'white', fontSize: '0.82rem', outline: 'none' }}
                         />
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => removeReference(idx)}
-                        style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', padding: '0.25rem', marginTop: '0.1rem', opacity: 0.7 }}
-                        onMouseOver={e => e.currentTarget.style.opacity = '1'}
-                        onMouseOut={e => e.currentTarget.style.opacity = '0.7'}
-                      >
-                        <X size={15} />
-                      </button>
                     </div>
                   ))}
                 </div>
               )}
             </div>
 
-            <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
-              <button onClick={handleSave} className="btn btn-primary">
+            <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem', flexWrap: 'wrap' }}>
+              <button onClick={handleSave} className="btn btn-primary" style={{ flex: 1 }}>
                 <Save size={16} /> Save Changes
               </button>
-              <button onClick={() => { setEditData(idea); setIsEditing(false); }} className="btn" style={{ background: '#334155' }}>Cancel</button>
+              <button onClick={() => { setEditData(idea); setIsEditing(false); }} className="btn" style={{ background: '#334155', flex: 1 }}>Cancel</button>
             </div>
           </>
         )}

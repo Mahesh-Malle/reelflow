@@ -248,11 +248,11 @@ const Categories = () => {
       </div>
 
       {/* Tab Navigation */}
-      <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '1rem' }}>
+      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '1rem', overflowX: 'auto', whiteSpace: 'nowrap' }}>
         {[
-          { id: 'CONTENT_CATEGORY', label: '📦 Content Categories', color: '#6366f1' },
-          { id: 'CONTENT_TYPE',     label: '🎬 Content Types',       color: '#22c55e' },
-          { id: 'HOOK_TYPE',        label: '🎣 Hook Types',          color: '#f97316' },
+          { id: 'CONTENT_CATEGORY', label: '📦 Categories', color: '#6366f1' },
+          { id: 'CONTENT_TYPE',     label: '🎬 Types',       color: '#22c55e' },
+          { id: 'HOOK_TYPE',        label: '🎣 Hooks',          color: '#f97316' },
         ].map(tab => (
           <button
             key={tab.id}
@@ -261,11 +261,13 @@ const Categories = () => {
               background: activeTab === tab.id ? tab.color : 'transparent',
               color: 'white',
               border: `2px solid ${activeTab === tab.id ? tab.color : 'rgba(255,255,255,0.2)'}`,
-              padding: '0.75rem 1.5rem',
+              padding: '0.5rem 1rem',
               borderRadius: '0.5rem',
               cursor: 'pointer',
               fontWeight: activeTab === tab.id ? '600' : '400',
               transition: 'all 0.2s',
+              fontSize: '0.85rem',
+              flexShrink: 0
             }}
           >
             {tab.label}
@@ -276,26 +278,28 @@ const Categories = () => {
       {/* Add Form */}
       <div className="stat-card" style={{ marginBottom: '2rem' }}>
         <form onSubmit={handleAdd}>
-          <div style={{ display: 'flex', gap: '1rem', marginBottom: showAddDesc ? '0.75rem' : '0' }}>
+          <div style={{ display: 'flex', gap: '0.75rem', marginBottom: showAddDesc ? '0.75rem' : '0', flexWrap: 'wrap' }}>
             <input
               type="text"
               placeholder={PLACEHOLDERS.name[activeTab]}
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
               disabled={loading}
-              style={{ flex: 1 }}
+              style={{ flex: '1 1 200px' }}
             />
-            <button
-              type="button"
-              onClick={() => setShowAddDesc(p => !p)}
-              title="Add description"
-              style={{ background: showAddDesc ? `${accent}33` : 'rgba(255,255,255,0.05)', border: `1px solid ${showAddDesc ? accent : 'rgba(255,255,255,0.15)'}`, color: showAddDesc ? accent : '#94a3b8', borderRadius: '0.4rem', padding: '0 0.75rem', cursor: 'pointer', flexShrink: 0 }}
-            >
-              <FileText size={16} />
-            </button>
-            <button type="submit" className="btn btn-primary" disabled={loading || !newName.trim()} style={{ flexShrink: 0 }}>
-              <Plus size={18} /> Add {addLabel}
-            </button>
+            <div style={{ display: 'flex', gap: '0.5rem', width: '100%', justifyContent: 'flex-end', flex: '1 1 auto' }}>
+              <button
+                type="button"
+                onClick={() => setShowAddDesc(p => !p)}
+                title="Add description"
+                style={{ background: showAddDesc ? `${accent}33` : 'rgba(255,255,255,0.05)', border: `1px solid ${showAddDesc ? accent : 'rgba(255,255,255,0.15)'}`, color: showAddDesc ? accent : '#94a3b8', borderRadius: '0.4rem', padding: '0.6rem 0.75rem', cursor: 'pointer', flexShrink: 0 }}
+              >
+                <FileText size={16} />
+              </button>
+              <button type="submit" className="btn btn-primary" disabled={loading || !newName.trim()} style={{ flex: 1, maxWidth: '200px' }}>
+                <Plus size={18} /> Add
+              </button>
+            </div>
           </div>
 
           {showAddDesc && (
@@ -332,17 +336,17 @@ const Categories = () => {
       {/* Summary */}
       <div style={{ marginTop: '3rem', padding: '1.5rem', background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.3)', borderRadius: '0.75rem' }}>
         <h3 style={{ marginTop: 0, marginBottom: '1rem' }}>📊 Summary</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
+        <div className="stats-grid">
           <div>
-            <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Content Categories</div>
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Categories</div>
             <div style={{ fontSize: '1.5rem', fontWeight: '600', color: '#6366f1' }}>{contentCats.length}</div>
           </div>
           <div>
-            <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Content Types</div>
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Types</div>
             <div style={{ fontSize: '1.5rem', fontWeight: '600', color: '#22c55e' }}>{contentTypes.length}</div>
           </div>
           <div>
-            <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Hook Types</div>
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Hooks</div>
             <div style={{ fontSize: '1.5rem', fontWeight: '600', color: '#f97316' }}>{hookTypes.length}</div>
           </div>
         </div>

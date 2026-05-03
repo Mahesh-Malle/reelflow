@@ -71,18 +71,18 @@ const Channels = () => {
 
   return (
     <div className="channels-page">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h2>Manage Your Channels</h2>
-          <p style={{ color: 'var(--text-muted)', marginTop: '0.5rem' }}>Add, edit, or remove your YouTube/Instagram channels</p>
+          <p style={{ color: 'var(--text-muted)', marginTop: '0.2rem', fontSize: '0.9rem' }}>Add, edit, or remove your YouTube/Instagram channels</p>
         </div>
-        <div style={{ display: 'flex', gap: '1rem' }}>
-          <button className="btn btn-primary" onClick={() => !editingId && (setShowAdd(!showAdd), setNewChannel({ name: '', youtubeHandle: '', instagramHandle: '' }))}>
+        <div style={{ display: 'flex', gap: '0.75rem', width: '100%', justifyContent: 'flex-start' }} className="mobile-header-actions">
+          <button className="btn btn-primary" onClick={() => !editingId && (setShowAdd(!showAdd), setNewChannel({ name: '', youtubeHandle: '', instagramHandle: '' }))} style={{ flex: 1, maxWidth: '160px' }}>
             <Plus size={18} /> Add Channel
           </button>
           {channels.length === 0 && (
-            <button className="btn" onClick={seedDefaults} style={{ background: '#334155' }}>
-              Seed Default Channels
+            <button className="btn" onClick={seedDefaults} style={{ background: '#334155', flex: 1, maxWidth: '200px' }}>
+              Seed Defaults
             </button>
           )}
         </div>

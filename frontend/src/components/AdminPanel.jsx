@@ -126,8 +126,8 @@ const AdminPanel = () => {
         <p style={{ color: 'var(--text-muted)' }}>Grant channel access to team members and view your team.</p>
       </div>
 
-      <div className="stats-grid" style={{ gridTemplateColumns: '1.2fr 2fr', alignItems: 'start', gap: '2rem' }}>
-        <form className="stat-card" onSubmit={handleSubmit} style={{ position: 'sticky', top: '2rem' }}>
+      <div className="responsive-grid" style={{ alignItems: 'start', gap: '2rem' }}>
+        <form className="stat-card" onSubmit={handleSubmit}>
           <h3 style={{ marginBottom: '1.5rem' }}>Assign New Access</h3>
           
           <div className="form-group">

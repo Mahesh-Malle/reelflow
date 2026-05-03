@@ -599,34 +599,36 @@ const Videos = () => {
         <div style={{
           position: 'fixed',
           bottom: 0,
-          left: 'var(--sidebar-width)',
+          left: 0,
           right: 0,
           background: 'rgba(15,23,42,0.97)',
           borderTop: '1px solid rgba(255,255,255,0.1)',
           backdropFilter: 'blur(8px)',
-          padding: '0.9rem 2rem',
+          padding: '0.75rem 1rem',
           display: 'flex',
+          flexDirection: 'column',
+          gap: '0.75rem',
           alignItems: 'center',
-          justifyContent: 'space-between',
-          zIndex: 100,
-        }}>
-          <span style={{ color: modifiedCount > 0 ? 'var(--primary)' : 'var(--text-muted)', fontWeight: modifiedCount > 0 ? '600' : '400', fontSize: '0.9rem' }}>
+          justifyContent: 'center',
+          zIndex: 1100,
+        }} className="bulk-edit-bar">
+          <span style={{ color: modifiedCount > 0 ? 'var(--primary)' : 'var(--text-muted)', fontWeight: modifiedCount > 0 ? '600' : '400', fontSize: '0.85rem', textAlign: 'center' }}>
             {modifiedCount > 0 ? `${modifiedCount} video${modifiedCount !== 1 ? 's' : ''} modified` : 'No changes yet — edit the fields above'}
           </span>
-          <div style={{ display: 'flex', gap: '0.75rem' }}>
+          <div style={{ display: 'flex', gap: '0.5rem', width: '100%', justifyContent: 'center' }}>
             <button
               onClick={exitEditMode}
               disabled={saving}
-              style={{ background: '#334155', color: 'white', border: 'none', padding: '0.55rem 1.4rem', borderRadius: '0.45rem', cursor: 'pointer', fontSize: '0.9rem' }}
+              style={{ flex: 1, maxWidth: '150px', background: '#334155', color: 'white', border: 'none', padding: '0.5rem', borderRadius: '0.4rem', cursor: 'pointer', fontSize: '0.85rem' }}
             >
               Cancel
             </button>
             <button
               onClick={handleBulkSave}
               disabled={modifiedCount === 0 || saving}
-              style={{ background: modifiedCount === 0 ? '#334155' : 'var(--success)', color: 'white', border: 'none', padding: '0.55rem 1.6rem', borderRadius: '0.45rem', cursor: modifiedCount === 0 ? 'not-allowed' : 'pointer', fontSize: '0.9rem', fontWeight: '600', opacity: modifiedCount === 0 ? 0.5 : 1, display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+              style={{ flex: 1, maxWidth: '200px', background: modifiedCount === 0 ? '#334155' : 'var(--success)', color: 'white', border: 'none', padding: '0.5rem', borderRadius: '0.4rem', cursor: modifiedCount === 0 ? 'not-allowed' : 'pointer', fontSize: '0.85rem', fontWeight: '600', opacity: modifiedCount === 0 ? 0.5 : 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem' }}
             >
-              {saving ? 'Saving…' : `Save All Changes${modifiedCount > 0 ? ` (${modifiedCount})` : ''}`}
+              {saving ? 'Saving…' : `Save${modifiedCount > 0 ? ` (${modifiedCount})` : ''}`}
             </button>
           </div>
         </div>

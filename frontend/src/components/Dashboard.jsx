@@ -281,7 +281,7 @@ const AnalyticsSection = ({ title, data, reachColor, convColor }) => {
       </div>
 
       {/* Insight cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.25rem' }}>
+      <div className="responsive-grid" style={{ marginBottom: '1.25rem' }}>
         <InsightCard
           icon="🔥"
           label={`Highest Reach · ${PLATFORMS.find(p => p.key === platform).label}`}
@@ -299,7 +299,7 @@ const AnalyticsSection = ({ title, data, reachColor, convColor }) => {
       </div>
 
       {/* Charts */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+      <div className="responsive-grid">
         <div className="chart-container">
           <div style={{ marginBottom: '0.75rem' }}>
             <span style={{ fontWeight: '600', fontSize: '0.9rem' }}>Reach</span>
