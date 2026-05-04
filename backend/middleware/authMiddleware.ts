@@ -32,6 +32,7 @@ export const requireAuth = (req: AuthRequest, res: Response, next: NextFunction)
 
 const PERMISSION_LEVELS: Record<string, number> = {
   'VIEW_PLANNER': 1,
+  'SCRIPT_WRITER': 1.5,
   'EDIT_PLANNER': 2,
   'VIEW_ANALYTICS': 3,
   'EDIT_ANALYTICS': 4,

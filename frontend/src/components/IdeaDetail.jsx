@@ -91,6 +91,7 @@ const IdeaDetail = ({ ideaId, onBack, onRefresh }) => {
         hookTypes: hookTypeIds,
         references: cleanRefs,
         notes: editData.notes || '',
+        needScript: editData.needScript || false,
       });
       setIdea(editData);
       setIsEditing(false);
@@ -178,7 +179,14 @@ const IdeaDetail = ({ ideaId, onBack, onRefresh }) => {
 
         {!isEditing ? (
           <>
-            <h2 style={{ margin: 0, fontSize: '1.5rem' }}>{idea.title}</h2>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+              <h2 style={{ margin: 0, fontSize: '1.5rem' }}>{idea.title}</h2>
+              {idea.needScript && (
+                <span style={{ fontSize: '0.7rem', color: '#ec4899', background: 'rgba(236,72,153,0.1)', border: '1px solid rgba(236,72,153,0.3)', padding: '0.15rem 0.6rem', borderRadius: '4px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+                  Need Script
+                </span>
+              )}
+            </div>
             {idea.createdBy && (
                 <div style={{ marginTop: '0.4rem' }}>
                   <span style={{ 
@@ -322,6 +330,22 @@ const IdeaDetail = ({ ideaId, onBack, onRefresh }) => {
           </>
         ) : (
           <>
+            {user?.isAdmin && (
+              <div className="form-group" style={{ marginBottom: '1.25rem' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', cursor: 'pointer', padding: '0.75rem', borderRadius: '0.5rem', background: editData.needScript ? 'rgba(236,72,153,0.1)' : 'rgba(255,255,255,0.03)', border: `1px solid ${editData.needScript ? '#ec4899' : 'rgba(255,255,255,0.1)'}`, transition: 'all 0.2s' }}>
+                  <input
+                    type="checkbox"
+                    checked={editData.needScript || false}
+                    onChange={e => setEditData({ ...editData, needScript: e.target.checked })}
+                    style={{ width: '1.1rem', height: '1.1rem', accentColor: '#ec4899' }}
+                  />
+                  <span style={{ fontSize: '0.9rem', color: editData.needScript ? 'white' : 'var(--text-muted)', fontWeight: editData.needScript ? '600' : '400' }}>
+                    Need Script? <span style={{ fontSize: '0.75rem', marginLeft: '0.2rem', opacity: 0.8 }}>(Script Writer visibility)</span>
+                  </span>
+                </label>
+              </div>
+            )}
+
             <div className="form-group">
               <label>Title</label>
               <input

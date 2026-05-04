@@ -30,6 +30,7 @@ const videoSchema = new mongoose.Schema({
   isDateLocked: { type: Boolean, default: false },
   slot: { type: Number, default: 0 },
   isDeleted: { type: Boolean, default: false },
+  needScript: { type: Boolean, default: false },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   createdAt: { type: Date, default: Date.now }
 });

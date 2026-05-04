@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-export type Permission = 'VIEW_PLANNER' | 'EDIT_PLANNER' | 'VIEW_ANALYTICS' | 'EDIT_ANALYTICS' | 'ADMIN';
+export type Permission = 'VIEW_PLANNER' | 'EDIT_PLANNER' | 'VIEW_ANALYTICS' | 'EDIT_ANALYTICS' | 'ADMIN' | 'SCRIPT_WRITER';
 
 export interface IUserChannelAccess extends Document {
   userId: mongoose.Types.ObjectId;
@@ -13,7 +13,7 @@ const UserChannelAccessSchema: Schema = new Schema({
   channelId: { type: Schema.Types.ObjectId, ref: 'Channel', required: true },
   role: { 
     type: String, 
-    enum: ['VIEW_PLANNER', 'EDIT_PLANNER', 'VIEW_ANALYTICS', 'EDIT_ANALYTICS', 'ADMIN'],
+    enum: ['VIEW_PLANNER', 'EDIT_PLANNER', 'VIEW_ANALYTICS', 'EDIT_ANALYTICS', 'ADMIN', 'SCRIPT_WRITER'],
     required: true,
     default: 'VIEW_PLANNER'
   }

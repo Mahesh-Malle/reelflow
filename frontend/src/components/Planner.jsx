@@ -36,6 +36,7 @@ const Planner = () => {
     title: '', plannedDate: '', plannedTime: '',
     contentCategories: [], contentTypes: [], hookTypes: [],
     references: [], notes: '',
+    needScript: false,
   });
 
   const canEdit = hasPermission('EDIT_PLANNER');
@@ -103,7 +104,12 @@ const Planner = () => {
     if (!newIdea.title) { alert('Title is required!'); return; }
     try {
       await axios.post(`${API_URL}/videos`, { ...newIdea, channelId: activeChannel._id });
-      setNewIdea({ title: '', plannedDate: '', plannedTime: '', contentCategories: [], contentTypes: [], hookTypes: [], references: [], notes: '' });
+      setNewIdea({ 
+        title: '', plannedDate: '', plannedTime: '', 
+        contentCategories: [], contentTypes: [], hookTypes: [], 
+        references: [], notes: '',
+        needScript: false 
+      });
       setShowAdd(false);
       await fetchIdeas();
     } catch (error) {
@@ -502,6 +508,22 @@ const Planner = () => {
             )}
           </div>
 
+          {user?.isAdmin && (
+            <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', cursor: 'pointer', padding: '0.75rem', borderRadius: '0.5rem', background: newIdea.needScript ? 'rgba(236,72,153,0.1)' : 'rgba(255,255,255,0.03)', border: `1px solid ${newIdea.needScript ? '#ec4899' : 'rgba(255,255,255,0.1)'}`, transition: 'all 0.2s' }}>
+                <input
+                  type="checkbox"
+                  checked={newIdea.needScript}
+                  onChange={e => setNewIdea({ ...newIdea, needScript: e.target.checked })}
+                  style={{ width: '1.2rem', height: '1.2rem', accentColor: '#ec4899' }}
+                />
+                <span style={{ fontSize: '0.9rem', color: newIdea.needScript ? 'white' : 'var(--text-muted)', fontWeight: newIdea.needScript ? '600' : '400' }}>
+                  Need Script? <span style={{ fontSize: '0.75rem', marginLeft: '0.2rem', opacity: 0.8 }}>(Script Writer will see this)</span>
+                </span>
+              </label>
+            </div>
+          )}
+
           <div className="responsive-grid">
             <div className="form-group">
               <label>Planned Date</label>
@@ -710,12 +732,12 @@ const Planner = () => {
                               <span style={{ fontSize: '0.73rem', padding: '0.18rem 0.45rem', borderRadius: '4px', background: 'var(--warning)', flexShrink: 0, fontWeight: '600' }}>
                                 Planned
                               </span>
-                              {video.isDateLocked && (
-                                <span title="Date locked" style={{ fontSize: '0.68rem', color: '#f59e0b', background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.3)', padding: '0.1rem 0.4rem', borderRadius: '3px', flexShrink: 0 }}>
-                                  locked
-                                </span>
-                              )}
-                              <h4 style={{ margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{video.title}</h4>
+                                {video.needScript && (
+                                  <span title="Script Required" style={{ fontSize: '0.68rem', color: '#ec4899', background: 'rgba(236,72,153,0.1)', border: '1px solid rgba(236,72,153,0.3)', padding: '0.1rem 0.45rem', borderRadius: '4px', flexShrink: 0, fontWeight: '600' }}>
+                                    Need Script
+                                  </span>
+                                )}
+                                <h4 style={{ margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{video.title}</h4>
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.2rem' }}>
                               {video.createdBy && (

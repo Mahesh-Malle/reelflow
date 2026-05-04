@@ -17,6 +17,14 @@ export const getVideos = async (req: AuthRequest, res: Response) => {
     const query: any = { channelId, isDeleted: { $ne: true } };
     if (status) query.status = status;
 
+    // Filter for Script Writers
+    if (!req.user?.isAdmin) {
+      const access = await UserChannelAccess.findOne({ userId: req.user?.userId, channelId });
+      if (access?.role === 'SCRIPT_WRITER') {
+        query.needScript = true;
+      }
+    }
+
     const videos = await Video.find(query)
       .sort({ publishDate: -1 })
       .populate('createdBy', 'name isAdmin');

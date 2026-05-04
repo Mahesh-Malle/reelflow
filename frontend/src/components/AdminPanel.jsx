@@ -28,6 +28,7 @@ const AdminPanel = () => {
 
   const availablePermissions = [
     { id: 'VIEW_PLANNER', label: 'View Planner' },
+    { id: 'SCRIPT_WRITER', label: 'Script Writer' },
     { id: 'EDIT_PLANNER', label: 'Edit Planner' },
     { id: 'VIEW_ANALYTICS', label: 'View Analytics' },
     { id: 'EDIT_ANALYTICS', label: 'Edit Analytics' },
