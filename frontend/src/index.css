@@ -324,3 +324,67 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
 
+/* FAB Styles */
+.fab {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), #4f46e5);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+  cursor: pointer;
+  z-index: 1200;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fab:hover {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 12px 30px rgba(99, 102, 241, 0.6);
+}
+
+.fab:active {
+  transform: scale(0.95);
+}
+
+@media (min-width: 1025px) {
+  .mobile-only {
+    display: none !important;
+  }
+}
+
+/* Create Idea Page */
+.create-idea-page {
+  animation: slideIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(30px);
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0);
+  }
+}
+
+/* Mobile Adjustments for Form */
+@media (max-width: 768px) {
+  .fab {
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 54px;
+    height: 54px;
+  }
+  
+  .create-idea-page {
+    padding-bottom: 5rem; /* Space for FAB or footer */
+  }
+}

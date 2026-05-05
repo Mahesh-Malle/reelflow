@@ -10,6 +10,8 @@ import Channels from './components/Channels';
 
 import AdminPanel from './components/AdminPanel';
 import Login from './components/Login';
+import CreateIdea from './components/CreateIdea';
+import { useNavigate } from 'react-router-dom';
 
 const TopBar = ({ onMenuClick }) => {
   const { channels, activeChannel, setActiveChannel, setUser, user } = useApp();
@@ -152,6 +154,21 @@ const MobileHeader = ({ onMenuClick }) => {
   );
 };
 
+const FAB = ({ hasPermission }) => {
+  const navigate = useNavigate();
+  if (!hasPermission('EDIT_PLANNER')) return null;
+
+  return (
+    <button 
+      className="fab mobile-only" 
+      onClick={() => navigate('/create-idea')}
+      title="Create New Idea"
+    >
+      <Plus size={28} />
+    </button>
+  );
+};
+
 const Layout = () => {
   const { user, loading, hasPermission } = useApp();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -184,8 +201,10 @@ const Layout = () => {
           <Route path="/categories" element={hasPermission('VIEW_ANALYTICS') ? <Categories /> : <Planner />} />
           <Route path="/channels" element={hasPermission('ADMIN') ? <Channels /> : <Planner />} />
           <Route path="/admin" element={hasPermission('ADMIN') ? <AdminPanel /> : <Planner />} />
+          <Route path="/create-idea" element={<CreateIdea />} />
         </Routes>
       </main>
+      <FAB hasPermission={hasPermission} />
     </div>
   );
 };
