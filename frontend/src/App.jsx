@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Calendar, Video, Tag, TrendingUp, Radio, Settings, Loader2, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Calendar, Video, Tag, TrendingUp, Radio, Settings, Loader2, Menu, X, Plus } from 'lucide-react';
 import { AppProvider, useApp } from './context/AppContext';
 import Dashboard from './components/Dashboard';
 import Planner from './components/Planner';

@@ -19,7 +19,10 @@ export const getVideos = async (req: AuthRequest, res: Response) => {
 
     // Filter for Script Writers
     if (!req.user?.isAdmin) {
-      const access = await UserChannelAccess.findOne({ userId: req.user?.userId, channelId });
+      const access = await UserChannelAccess.findOne({ 
+        userId: req.user?.userId, 
+        channelId: channelId as string 
+      });
       if (access?.role === 'SCRIPT_WRITER') {
         query.needScript = true;
       }
@@ -79,7 +82,10 @@ export const updateVideo = async (req: AuthRequest, res: Response) => {
     // If trying to mark as Posted, check for ADMIN level (level 5)
     if (status === 'Posted' && !req.user?.isAdmin) {
       const targetChannelId = channelId || (await Video.findById(id))?.channelId;
-      const access = await UserChannelAccess.findOne({ userId: req.user?.userId, channelId: targetChannelId });
+      const access = await UserChannelAccess.findOne({ 
+        userId: req.user?.userId, 
+        channelId: targetChannelId as string 
+      });
       
       const PERMISSION_LEVELS: Record<string, number> = {
         'VIEW_PLANNER': 1,

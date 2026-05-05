@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useApp } from '../context/AppContext';
-import { Edit2, Save, Tag, ChevronUp, ChevronDown, Filter, X, Pencil, Trash2, Search, ExternalLink } from 'lucide-react';
+import { Edit2, Save, Tag, ChevronUp, ChevronDown, Filter, X, Pencil, Trash2, Search, ExternalLink, AlertCircle } from 'lucide-react';
 import CategoryEditModal from './CategoryEditModal';
 import IdeaDetail from './IdeaDetail';
 
@@ -16,7 +16,25 @@ const STICKY_SHADOW = '4px 0 10px rgba(0,0,0,0.4)';
 // ─── Videos ───────────────────────────────────────────────────────────────────
 
 const Videos = () => {
-  const { activeChannel, API_URL, hasPermission, user } = useApp();
+  const { activeChannel, API_URL, hasPermission, user, channels } = useApp();
+
+  if (channels.length === 0) return (
+    <div className="videos">
+      <div className="insight-banner" style={{ background: 'var(--bg-card)', border: '1px dashed var(--warning)' }}>
+        <AlertCircle size={24} color="var(--warning)" />
+        <div><strong>No Channels Yet!</strong> Go to <strong>Manage Channels</strong> to add your channel first.</div>
+      </div>
+    </div>
+  );
+
+  if (!activeChannel) return (
+    <div className="videos">
+      <div className="insight-banner" style={{ background: 'var(--bg-card)', border: '1px dashed var(--warning)' }}>
+        <AlertCircle size={24} color="var(--warning)" />
+        <div><strong>Select a Channel First!</strong> Choose a channel from the top bar to view the video library.</div>
+      </div>
+    </div>
+  );
 
   // data
   const [videos, setVideos]         = useState([]);

@@ -43,35 +43,30 @@ const PLATFORMS = [
   { key: 'instagram', label: 'Instagram' },
 ];
 
-// Returns views for the given platform mode
 const getViews = (item, platform) => {
   if (platform === 'youtube')   return item.youtubeViews   || 0;
   if (platform === 'instagram') return item.instagramViews || 0;
   return item.totalViews || 0;
 };
 
-// Returns subs/followers for the given platform mode
 const getSubs = (item, platform) => {
   if (platform === 'youtube')   return item.totalSubs      || 0;
   if (platform === 'instagram') return item.totalFollowers || 0;
   return (item.totalSubs || 0) + (item.totalFollowers || 0);
 };
 
-// Conversion: subs per 1 000 views for the given platform mode
 const getConv = (item, platform) => {
   const v = getViews(item, platform);
   const s = getSubs(item, platform);
   return v > 0 ? (s / v) * 1000 : 0;
 };
 
-// Platform-aware video count
 const getVideoCount = (item, platform) => {
   if (platform === 'youtube')   return item.youtubeVideoCount   ?? 0;
   if (platform === 'instagram') return item.instagramVideoCount ?? 0;
   return item.totalVideos ?? 0;
 };
 
-// Below this threshold, conversion is statistically unreliable
 const LOW_VIEWS_THRESHOLD = 10_000;
 const isLowData = (item, platform) => getViews(item, platform) < LOW_VIEWS_THRESHOLD;
 
@@ -194,9 +189,7 @@ const AnalyticsSection = ({ title, data, reachColor, convColor }) => {
     );
   }
 
-  // Derived values for the active platform
   const highestReach = [...data].sort((a, b) => getViews(b, platform) - getViews(a, platform))[0];
-  // Best conversion excludes low-data items so the insight card is trustworthy
   const reliableItems = data.filter((d) => !isLowData(d, platform));
   const bestConv = reliableItems.length > 0
     ? [...reliableItems].sort((a, b) => getConv(b, platform) - getConv(a, platform))[0]
@@ -228,7 +221,6 @@ const AnalyticsSection = ({ title, data, reachColor, convColor }) => {
     labels: truncatedLabels,
     datasets: [{
       label: `${subsLabel} per 1K Views`,
-      // Low-data bars rendered as null so they're skipped entirely
       data: data.map((d) => isLowData(d, platform) ? null : parseFloat(getConv(d, platform).toFixed(4))),
       backgroundColor: `${convColor}90`,
       borderColor: convColor,
@@ -274,13 +266,11 @@ const AnalyticsSection = ({ title, data, reachColor, convColor }) => {
 
   return (
     <div style={{ marginBottom: '2.5rem' }}>
-      {/* Header row: title + toggle */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
         <h3 style={{ margin: 0 }}>{title}</h3>
         <PlatformToggle value={platform} onChange={setPlatform} />
       </div>
 
-      {/* Insight cards */}
       <div className="responsive-grid" style={{ marginBottom: '1.25rem' }}>
         <InsightCard
           icon="🔥"
@@ -298,7 +288,6 @@ const AnalyticsSection = ({ title, data, reachColor, convColor }) => {
         />
       </div>
 
-      {/* Charts */}
       <div className="responsive-grid">
         <div className="chart-container">
           <div style={{ marginBottom: '0.75rem' }}>
@@ -326,7 +315,26 @@ const AnalyticsSection = ({ title, data, reachColor, convColor }) => {
 // ─── Dashboard ────────────────────────────────────────────────────────────────
 
 const Dashboard = () => {
-  const { activeChannel, API_URL } = useApp();
+  const { activeChannel, API_URL, channels } = useApp();
+
+  if (channels.length === 0) return (
+    <div className="dashboard">
+      <div className="insight-banner" style={{ background: 'var(--bg-card)', border: '1px dashed var(--warning)' }}>
+        <AlertCircle size={24} color="var(--warning)" />
+        <div><strong>No Channels Yet!</strong> Go to <strong>Manage Channels</strong> to add your channel first.</div>
+      </div>
+    </div>
+  );
+
+  if (!activeChannel) return (
+    <div className="dashboard">
+      <div className="insight-banner" style={{ background: 'var(--bg-card)', border: '1px dashed var(--warning)' }}>
+        <AlertCircle size={24} color="var(--warning)" />
+        <div><strong>Select a Channel First!</strong> Choose a channel from the top bar to see analytics.</div>
+      </div>
+    </div>
+  );
+
   const [overview, setOverview]               = useState({ totalViews: 0, totalSubs: 0, totalFollowers: 0, videoCount: 0 });
   const [catAnalytics, setCatAnalytics]       = useState([]);
   const [contentTypeAnalytics, setContentTypeAnalytics] = useState([]);
@@ -391,7 +399,6 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard">
-      {/* Global insight banner */}
       {globalBestConv && (
         <div className="insight-banner">
           <span style={{ fontSize: '1.4rem' }}>🚀</span>
@@ -401,7 +408,6 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* Overview stats */}
       <div className="stats-grid" style={{ marginBottom: '2.5rem' }}>
         <div className="stat-card">
           <div className="stat-label">Total Views</div>
