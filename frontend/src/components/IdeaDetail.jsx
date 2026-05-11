@@ -16,7 +16,7 @@ const IdeaDetail = ({ ideaId, onBack, onRefresh }) => {
   const [toast, setToast] = useState(null);
   const [openModal, setOpenModal] = useState(null);
 
-  const canEdit = hasPermission('EDIT_PLANNER');
+  const canEdit = hasPermission('SCRIPT_WRITER');
   const canDelete = hasPermission('ADMIN') || (idea?.createdBy?._id === user?.userId);
   const canPost = hasPermission('ADMIN');
 
