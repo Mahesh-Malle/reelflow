@@ -20,7 +20,7 @@ const CategoryEditModal = ({ videoId, onClose, onSave }) => {
 
   const fetchData = async () => {
     try {
-      const { data: videoData } = await axios.get(`${API_URL}/videos/${videoId}`);
+      const { data: videoData } = await axios.get(`${API_URL}/videos/${videoId}?channelId=${activeChannel._id}`);
       setVideo(videoData);
       
       // Set selected IDs from video data

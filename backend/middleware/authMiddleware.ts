@@ -41,7 +41,7 @@ const PERMISSION_LEVELS: Record<string, number> = {
 
 export const requirePermission = (permission: Permission) => {
   return async (req: AuthRequest, res: Response, next: NextFunction) => {
-    const channelId = req.headers['x-channel-id'] || req.query.channelId || req.body.channelId;
+    const channelId = req.headers['x-channel-id'] || req.query.channelId || req.body?.channelId;
     const userId = req.user?.userId;
 
     if (!channelId || !userId) {
