@@ -4,7 +4,7 @@ import { useApp } from '../context/AppContext';
 import { X, Save } from 'lucide-react';
 
 const CategoryEditModal = ({ videoId, onClose, onSave }) => {
-  const { API_URL } = useApp();
+  const { API_URL, activeChannel } = useApp();
   const [video, setVideo] = useState(null);
   const [contentCategories, setContentCategories] = useState([]);
   const [contentTypes, setContentTypes] = useState([]);
@@ -30,9 +30,9 @@ const CategoryEditModal = ({ videoId, onClose, onSave }) => {
 
       // Fetch available categories
       const [catRes, typeRes, hookRes] = await Promise.all([
-        axios.get(`${API_URL}/categories?channelId=${videoData.channelId}&type=CONTENT_CATEGORY`),
-        axios.get(`${API_URL}/categories?channelId=${videoData.channelId}&type=CONTENT_TYPE`),
-        axios.get(`${API_URL}/categories?channelId=${videoData.channelId}&type=HOOK_TYPE`)
+        axios.get(`${API_URL}/categories?channelId=${activeChannel?._id || videoData.channelId}&type=CONTENT_CATEGORY`),
+        axios.get(`${API_URL}/categories?channelId=${activeChannel?._id || videoData.channelId}&type=CONTENT_TYPE`),
+        axios.get(`${API_URL}/categories?channelId=${activeChannel?._id || videoData.channelId}&type=HOOK_TYPE`)
       ]);
       setContentCategories(catRes.data);
       setContentTypes(typeRes.data);

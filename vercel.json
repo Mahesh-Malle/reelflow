@@ -19,6 +19,30 @@
       "destination": "backend/index.ts"
     },
     {
+      "source": "/planner",
+      "destination": "frontend/index.html"
+    },
+    {
+      "source": "/videos",
+      "destination": "frontend/index.html"
+    },
+    {
+      "source": "/categories",
+      "destination": "frontend/index.html"
+    },
+    {
+      "source": "/channels",
+      "destination": "frontend/index.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "frontend/index.html"
+    },
+    {
+      "source": "/create-idea",
+      "destination": "frontend/index.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "frontend/$1"
     }
