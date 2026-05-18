@@ -46,7 +46,7 @@ const CategoryEditModal = ({ videoId, onClose, onSave }) => {
 
   const handleSave = async () => {
     try {
-      await axios.put(`${API_URL}/videos/${videoId}`, {
+      await axios.put(`${API_URL}/videos/${videoId}?channelId=${activeChannel._id}`, {
         contentCategories: selectedCategories,
         contentTypes: selectedTypes,
         hookTypes: selectedHooks
