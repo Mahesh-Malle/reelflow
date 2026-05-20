@@ -8,6 +8,7 @@ export const AppProvider = ({ children }) => {
   const [activeChannel, setActiveChannel] = useState(null);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [plannerCache, setPlannerCache] = useState({});
 
   const API_URL = import.meta.env.VITE_API_URL || '/api';
 
@@ -20,6 +21,12 @@ export const AppProvider = ({ children }) => {
     }
     fetchChannels();
   }, []);
+
+  useEffect(() => {
+    if (!user) {
+      setPlannerCache({});
+    }
+  }, [user]);
 
   const fetchChannels = async () => {
     const token = localStorage.getItem('token');
@@ -72,7 +79,9 @@ export const AppProvider = ({ children }) => {
       loading,
       API_URL,
       fetchChannels,
-      hasPermission
+      hasPermission,
+      plannerCache,
+      setPlannerCache
     }}>
       {children}
     </AppContext.Provider>
@@ -80,3 +89,4 @@ export const AppProvider = ({ children }) => {
 };
 
 export const useApp = () => useContext(AppContext);
+

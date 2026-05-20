@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import axios from 'axios';
 import { useApp } from '../context/AppContext';
 import { Plus, Clock, Calendar as CalIcon, AlertCircle, Link, X, GripVertical, Lock, Unlock } from 'lucide-react';
@@ -14,10 +14,15 @@ const addDays   = (dateStr, n) => {
 };
 
 const Planner = () => {
-  const { activeChannel, API_URL, channels, hasPermission } = useApp();
+  const { activeChannel, API_URL, channels, hasPermission, plannerCache, setPlannerCache } = useApp();
   const navigate = useNavigate();
   const [ideas, setIdeas]                       = useState([]);
   const [selectedIdeaId, setSelectedIdeaId]       = useState(null);
+  const activeChannelRef = useRef(activeChannel);
+
+  useEffect(() => {
+    activeChannelRef.current = activeChannel;
+  }, [activeChannel]);
 
   // drag state
   const [draggingId, setDraggingId]       = useState(null);
@@ -30,16 +35,34 @@ const Planner = () => {
 
   useEffect(() => {
     if (activeChannel) {
-      fetchIdeas();
+      // Restore cached data immediately if available, otherwise clear to avoid showing old channel data
+      const cached = plannerCache[activeChannel._id];
+      if (cached) {
+        setIdeas(cached);
+      } else {
+        setIdeas([]);
+      }
+      fetchIdeas(activeChannel._id);
     }
   }, [activeChannel]);
 
-  const fetchIdeas = async () => {
+  const fetchIdeas = async (channelId = activeChannel?._id) => {
+    if (!channelId) return;
     try {
-      const { data } = await axios.get(`${API_URL}/videos?channelId=${activeChannel._id}`);
+      const { data } = await axios.get(`${API_URL}/videos?channelId=${channelId}`);
       const filtered = data.filter(v => v.status !== 'Posted');
       console.log(`[Planner] fetched=${data.length} total, non-posted=${filtered.length}`);
-      setIdeas(filtered);
+      
+      // Update cache
+      setPlannerCache(prev => ({
+        ...prev,
+        [channelId]: filtered
+      }));
+
+      // Only update local state if this is still the active channel
+      if (activeChannelRef.current && activeChannelRef.current._id === channelId) {
+        setIdeas(filtered);
+      }
     } catch (error) {
       console.error('Error fetching ideas:', error);
     }
@@ -191,16 +214,25 @@ const Planner = () => {
     const orderMap = Object.fromEntries(orderUpdates.map(u => [u._id, u.orderIndex]));
 
     // Optimistic update
-    setIdeas(prev => prev.map(v => {
-      const ds = v.plannedDate ? toDateStr(v.plannedDate) : null;
-      let newDate = v.plannedDate;
-      if (v._id === draggingId) {
-        newDate = targetPlannedDate;
-      } else if (isCrossDate && ds && shiftMap[ds]) {
-        newDate = shiftMap[ds] + 'T00:00:00.000Z';
+    setIdeas(prev => {
+      const updated = prev.map(v => {
+        const ds = v.plannedDate ? toDateStr(v.plannedDate) : null;
+        let newDate = v.plannedDate;
+        if (v._id === draggingId) {
+          newDate = targetPlannedDate;
+        } else if (isCrossDate && ds && shiftMap[ds]) {
+          newDate = shiftMap[ds] + 'T00:00:00.000Z';
+        }
+        return { ...v, plannedDate: newDate, ...(v._id in orderMap ? { orderIndex: orderMap[v._id] } : {}) };
+      });
+      if (activeChannel) {
+        setPlannerCache(cache => ({
+          ...cache,
+          [activeChannel._id]: updated
+        }));
       }
-      return { ...v, plannedDate: newDate, ...(v._id in orderMap ? { orderIndex: orderMap[v._id] } : {}) };
-    }));
+      return updated;
+    });
 
     cleanupDrag();
 
@@ -225,12 +257,27 @@ const Planner = () => {
     if (togglingLockId === video._id) return;
     setTogglingLockId(video._id);
     const newLocked = !video.isDateLocked;
-    setIdeas(prev => prev.map(v => v._id === video._id ? { ...v, isDateLocked: newLocked } : v));
+
+    const updateLockState = (locked) => {
+      setIdeas(prev => {
+        const updated = prev.map(v => v._id === video._id ? { ...v, isDateLocked: locked } : v);
+        if (activeChannel) {
+          setPlannerCache(cache => ({
+            ...cache,
+            [activeChannel._id]: updated
+          }));
+        }
+        return updated;
+      });
+    };
+
+    updateLockState(newLocked);
+
     try {
       await axios.put(`${API_URL}/videos/${video._id}?channelId=${activeChannel._id}`, {
         isDateLocked: newLocked });
     } catch {
-      setIdeas(prev => prev.map(v => v._id === video._id ? { ...v, isDateLocked: !newLocked } : v));
+      updateLockState(!newLocked);
     } finally {
       setTogglingLockId(null);
     }
